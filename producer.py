@@ -55,21 +55,51 @@ songs = [
     {"title": "Shining on E Wis", "artist": "Fujii Kaze", "genre": "J-Pop"},
     {"title": "GOING CRAZY", "artist": "TREASURE", "genre": "K-pop"},
     {"title": "Demons - 2008 Remaster", "artist": "The Fatback Band", "genre": "Funk"},
-    {"title": "More Than Just a Dream", "artist": "Fitz and The Tantrums", "genre": "Indie Pop"}
+    {"title": "More Than Just a Dream", "artist": "Fitz and The Tantrums", "genre": "Indie Pop"},
+    {"title": "Waiting For Love", "artist": "Avicii", "genre": "EDM"},
+    {"title": "Happy Together", "artist": "The Turtles", "genre": "Pop Rock"},
+    {"title": "Kokomo", "artist": "The Beach Boys", "genre": "Surf Rock"},
+    {"title": "Uptown Girl", "artist": "Billy Joel", "genre": "Pop"},
+    {"title": "Daylight", "artist": "Matt and Kim", "genre": "Indie Pop"},
+    {"title": "Beyond the Sea", "artist": "Bobby Darin", "genre": "Jazz"},
+    {"title": "Why Can't We Be Friends", "artist": "War", "genre": "Funk"},
+    {"title": "Animal", "artist": "Neon Trees", "genre": "Alt Rock"},
+    {"title": "Let Her Dance", "artist": "The Bobby Fuller Four", "genre": "Rock & Roll"},
+    {"title": "Sunshine, Lollipops And Rainbows", "artist": "Lesley Gore", "genre": "Pop"},
+    {"title": "Rasputin", "artist": "Boney M.", "genre": "Disco"},
+    {"title": "We Found Love", "artist": "Rihanna, Calvin Harris", "genre": "Pop"},
+    {"title": "Thinkin Bout You", "artist": "Frank Ocean", "genre": "Alt R&B"},
+    {"title": "Yesterday - Remastered 2009", "artist": "The Beatles", "genre": "Classic Rock"},
+    {"title": "Talk Too Much", "artist": "COIN", "genre": "Indie Pop"},
+    {"title": "Everybody Wants To Rule The World", "artist": "Tears For Fears", "genre": "New Wave"},
+    {"title": "I Ran (So Far Away)", "artist": "A Flock Of Seagulls", "genre": "Synthpop"},
+    {"title": "Talking In Your Sleep", "artist": "The Romantics", "genre": "Rock"},
+    {"title": "(I Just) Died In Your Arms", "artist": "Cutting Crew", "genre": "Pop Rock"},
+    {"title": "Waiting for a Girl Like You", "artist": "Foreigner", "genre": "Soft Rock"},
+    {"title": "Come As You Are", "artist": "Nirvana", "genre": "Grunge"},
+    {"title": "Don't Speak", "artist": "No Doubt", "genre": "Alt Rock"},
+    {"title": "Believe", "artist": "Cher", "genre": "Dance Pop"},
+    {"title": "I Want It That Way", "artist": "Backstreet Boys", "genre": "Pop"},
+    {"title": "Californication", "artist": "Red Hot Chili Peppers", "genre": "Alt Rock"},
+    {"title": "Iris", "artist": "The Goo Goo Dolls", "genre": "Alt Rock"},
+    {"title": "There She Goes", "artist": "The La's", "genre": "Britpop"},
+    {"title": "Under the Bridge", "artist": "Red Hot Chili Peppers", "genre": "Alt Rock"},
+    {"title": "Holding Out for a Hero", "artist": "Bonnie Tyler", "genre": "Rock"},
+    {"title": "Don't Stop Me Now", "artist": "Queen", "genre": "Classic Rock"}
 ]
 
 platforms = ["Spotify", "Apple Music", "YouTube Music", "SoundCloud", "Amazon Music"]
 
-# NEW adding moods for filtering (going to be randomly assignned by faker)
 moods = [
     "Happy", "Sad", "Energetic", "Calm", "Romantic", "Moody",
     "Chill", "Melancholic", "Hype", "Dreamy", "Dark", "Uplifting",
     "Groovy", "Hopeful", "Lo-fi"
 ]
+
 # Send fake data every [2] seconds
 while True:
     track = random.choice(songs)
-    duration = random.randint(90, 300)  # 1.5 to 5 minutes
+    duration = random.randint(90, 300) #in secs
     listen_position = random.randint(0, duration)
     completed = listen_position >= duration - 5
     rating = round(random.uniform(1.0, 5.0), 1)

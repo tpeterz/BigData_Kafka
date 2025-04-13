@@ -14,14 +14,8 @@
             <h4 class="text-white">Real-Time Streaming Summary</h4>
             <p>
                 This web app shows how real-time data flows through a simplified big data pipeline built with <strong>Apache Kafka</strong>. 
-                It simulates music listening activity using randomly generated events — like who’s listening, what they’re listening to, and where they’re listening from.
+                It simulates music listening activity using randomly generated events like who’s listening, what they’re listening to, or where they’re listening from
             </p>
-            <ul>
-                <li><strong>Topic:</strong> <code>music-streams</code> — the Kafka topic where all events are sent.</li>
-                <li><strong>Producer:</strong> Simulates real-time users streaming songs across different genres, platforms, and locations.</li>
-                <li><strong>Consumer:</strong> Picks up each message from the topic as it arrives and stores it for live analysis.</li>
-                <li><strong>Flask App:</strong> Displays the data on this page and lets users filter by artist, genre, mood, rating, or platform.</li>
-            </ul>
         </div>
 
         <!-- Filter Form -->
@@ -108,7 +102,7 @@
                     <th>Mood</th>
                     <th>Duration (s)</th>
                     <th>Listen Position</th>
-                    <th>% Listened</th> <!-- New column -->
+                    <th>% Listened</th> 
                     <th>Completed</th>
                     <th>Rating</th>
                     <th>Skipped</th>
@@ -127,7 +121,7 @@
                     <td>{{ msg.mood }}</td>
                     <td>{{ msg.duration_seconds }}</td>
                     <td>{{ msg.listen_position }}</td>
-                    <td>{{ (msg.listen_position / msg.duration_seconds * 100) | round(1) }}%</td> <!-- New cell -->
+                    <td>{{ (msg.listen_position / msg.duration_seconds * 100) | round(1) }}%</td> 
                     <td>{{ "Yes" if msg.completed else "No" }}</td>
                     <td>{{ msg.rating }}</td>
                     <td>{{ "Yes" if msg.is_skipped else "No" }}</td>

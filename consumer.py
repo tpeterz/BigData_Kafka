@@ -15,10 +15,15 @@ consumer = KafkaConsumer(
 received_messages = []
 
 def consume_messages():
-    global received_messages  # <- ensures shared access
+    global received_messages
     for message in consumer:
-        data = message.value
-        print(f"Received: {data}")
-        received_messages.append(data)
-        if len(received_messages) > 50:
-            received_messages.pop(0)
+        try:
+            data = message.value
+
+            print(f"Received: {data}")
+            received_messages.append(data)
+
+            if len(received_messages) > 50:
+                received_messages.pop(0)
+        except Exception as e:
+            print("Error processing message:", e)

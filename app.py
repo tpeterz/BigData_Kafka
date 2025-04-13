@@ -6,11 +6,14 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
+    # Read filters from query params
     artist = request.args.get('artist', '').lower()
     genre = request.args.get('genre', '').lower()
     platform = request.args.get('platform', '').lower()
     country = request.args.get('country', '').lower()
     mood = request.args.get('mood', '').lower()
+    rating = request.args.get('rating', '').strip()
+    skipped = request.args.get('skipped', '').lower()
 
     filtered = []
     for msg in received_messages:
@@ -24,10 +27,17 @@ def index():
             continue
         if mood and mood not in msg.get('mood', '').lower():
             continue
+        if rating and str(msg.get('rating', '')) != rating:
+            continue
+        if skipped:
+            is_skipped = msg.get('skipped', False)
+            if skipped == "yes" and not is_skipped:
+                continue
+            if skipped == "no" and is_skipped:
+                continue
         filtered.append(msg)
 
     return render_template('index.html', messages=filtered)
-
 
 def start_consumer():
     print("Starting consumer thread from Flask app...")

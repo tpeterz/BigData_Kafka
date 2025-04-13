@@ -16,7 +16,7 @@ These events are:
 - Displayed on a **Flask web interface**
 - Filterable by artist, platform, genre, mood, or country
 
-This mimics what real streaming platforms like Spotify might analyze — just simplified and randomized for learning purposes.
+This mimics what real streaming platforms like Spotify might analyze that are simplified and randomized for learning purposes.
 
 ---
 

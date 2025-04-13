@@ -1,6 +1,6 @@
 # Real-Time Kafka Music Streaming Analysis
 
-This project demonstrates a simplified real-time data pipeline using **Apache Kafka**, **Flask**, and **Docker** to simulate music streaming events. We look at who’s listening, what they’re listening to, where they’re listening from, and how they interact with the track.
+This project demonstrates a simplified real-time data pipeline using **Apache Kafka**, **Flask**, and **Docker** to simulate music streaming events. It tracks who’s listening, what they’re listening to, where they’re listening from, and how they interact with each track.
 
 ---
 
@@ -25,7 +25,7 @@ These events are:
 - Displayed on a **Flask web interface**
 - Filterable by artist, genre, platform, country, mood, rating, or whether the song was skipped
 
-This mimics how real platforms like Spotify or Apple Music analyze listener behavior, using randomized data for educational purposes.
+This simulates how actual music streaming platforms analyze listener behavior, using randomized data for educational purposes.
 
 ---
 
@@ -79,7 +79,7 @@ This mimics how real platforms like Spotify or Apple Music analyze listener beha
   - Rating
   - Skipped (yes/no)
 
-The form preserves your selections & the page can be refreshed manually using a button (instead of auto-refreshing every 5 seconds), making it easier to apply filters before the view resets.
+The form preserves the selections & the page can be refreshed manually to view an updated list of tracks and their  statistics.
 
 ---
 
@@ -87,14 +87,14 @@ The form preserves your selections & the page can be refreshed manually using a 
 
 - Kafka supports **real-time streaming**, which is fundamental to Big Data pipelines
 - Uses **partitioning** to distribute workload across nodes or brokers
-- Messages are **append-only**, ideal for logs, streams, and events
+- Messages are **append-only**, which is ideal for logs, streams, and events
 - Enables **loose coupling** between producers and consumers
 
-In our case, music streaming events are fire-and-forget. Producers do not need to know who consumes the data, and consumers can independently scale or process messages however they need to.
+In our case, Producers do not need to know who consumes the data, and consumers can independently scale or process messages as they need.
 
 #### Kafka Terminology
 
-- **Topic**: A category to which records are sent (like `music-streams`)
+- **Topic**: A category to which records are sent (in our case: `music-streams`)
 - **Partition**: A segment of a topic that allows Kafka to scale horizontally
 - **Broker**: A Kafka server that stores messages and serves client requests
 - **Producer**: The component that sends messages to a Kafka topic
@@ -104,18 +104,16 @@ In our case, music streaming events are fire-and-forget. Producers do not need t
 
 ## Docker and Architecture
 
-Docker Compose runs both Kafka and Zookeeper so you can:
+Docker Compose runs both Kafka and Zookeeper so we can:
 - Set up the broker system locally
 - Simulate a multi-component distributed pipeline
 - Avoid installing Kafka globally on your machine
 
-This makes the project easy to run, consistent for any user, and close to how microservice-based systems run in industry.
-
 ---
 
-## How It Relates to Cassandra and Data Modeling
+## Relation to Cassandra & Data Modeling
 
-While our messages are not persisted long-term in a database, if we were using Cassandra or designing a real schema, a good data model might look like:
+If we were using Cassandra or designing a real schema, a good data model might look like:
 
 ```sql
 CREATE TABLE music_streams_by_user (
@@ -137,7 +135,7 @@ CREATE TABLE music_streams_by_user (
 );
 ```
 
-This schema supports:
+The above schema supports:
 
 - High-speed inserts  
 - Time-ordered user data  

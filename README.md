@@ -76,7 +76,7 @@ The form preserves your selections & automatically refreshes every 5 seconds.
 
 In our case, music streaming events are fire-and-forget. Producers do not need to know who consumes the data, and consumers can independently scale or process messages however they need to.
 
-#### Kafka Terminology (Simplified)
+#### Kafka Terminology
 
 - **Topic**: A category to which records are sent (like `music-streams`)
 - **Partition**: A segment of a topic that allows Kafka to scale horizontally

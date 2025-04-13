@@ -1,6 +1,3 @@
-from pathlib import Path
-
-readme_content = """
 # Real-Time Kafka Music Streaming Analysis
 
 This project demonstrates a simplified real-time data pipeline using **Apache Kafka**, **Flask**, and **Docker** to simulate music streaming events — who’s listening, what they’re listening to, and where they are.

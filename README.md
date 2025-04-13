@@ -180,6 +180,14 @@ Go to [http://localhost:5000](http://localhost:5000) in your browser. You should
 
 ---
 
+## Live Dashboard Preview
+
+This is how the real-time data appears when viewed in the Flask web app:
+
+![Live Dashboard](pictures/Homepage_V1.png)
+
+---
+
 ## Future Considerations
 
 To push this project further:

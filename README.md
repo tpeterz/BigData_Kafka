@@ -63,11 +63,9 @@ This mimics how real platforms like Spotify or Apple Music analyze listener beha
   - Rating
   - Skipped (yes/no)
 
-The form preserves your selections and automatically refreshes every 5 seconds.
+The form preserves your selections & automatically refreshes every 5 seconds.
 
 ---
-
-## How This Connects to Big Data Class
 
 ### Kafka and Big Data Concepts
 
@@ -166,11 +164,11 @@ Go to [http://localhost:5000](http://localhost:5000) in your browser. You should
 
 To push this project further:
 
-- Add persistent storage using Cassandra or PostgreSQL  
-- Create graphs or visual analytics (e.g., genre distribution)  
+- Add persistent storage using Cassandra  
+- Create graphs or visual analytics (e.x. genre distribution)  
 - Use Kafka Connect or Spark Streaming for processing  
 - Simulate spikes in traffic or multi-user concurrency  
-- Store data in HDFS or S3 for batch analysis  
+- Store data in HDFS or S3 for batch analysis (as we are becoming experts in Amazon AWS)
 
 ---
 

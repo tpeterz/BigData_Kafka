@@ -1,6 +1,6 @@
 # Real-Time Kafka Music Streaming Analysis
 
-This project demonstrates a simplified real-time data pipeline using **Apache Kafka**, **Flask**, and **Docker** to simulate music streaming events. We look at who’s listening, what they’re listening to, and where they are.
+This project demonstrates a simplified real-time data pipeline using **Apache Kafka**, **Flask**, and **Docker** to simulate music streaming events. We look at who’s listening, what they’re listening to, where they’re listening from, and how they interact with the track.
 
 ---
 
@@ -10,6 +10,14 @@ We created a real-time streaming web app that mimics a music analytics dashboard
 
 - A user in **Japan** streamed “Glimpse of Us” on **Spotify** feeling **Melancholy**
 - Someone in **Colombia** listened to “Tokyo” on **YouTube Music**, skipped it, and rated it **4**
+
+Each message contains metadata such as:
+- Artist, genre, and platform
+- Country and city
+- Mood tag
+- How long the user listened (both seconds and % of the track)
+- Whether they completed the song or skipped it
+- A numeric user rating from 1 to 5
 
 These events are:
 - Sent by a Kafka **producer**
@@ -38,12 +46,14 @@ This mimics how real platforms like Spotify or Apple Music analyze listener beha
 ### 1. Producer (`producer.py`)
 - Uses `Faker` to simulate:
   - `user_id`, `username`, and `email`
-  - Song `title`, `artist`, and `genre`
-  - Platform like Spotify, YouTube Music, or Apple Music
+  - Song `title`, `artist`, and `genre` (pulled from a pre-defined curated list)
+  - Platform (Spotify, YouTube Music, Apple Music, SoundCloud, etc.)
   - Mood tag (e.g. Chill, Energetic, Sad)
-  - `duration` (randomized seconds)
-  - `rating` (0 to 5)
-  - `skipped` (boolean, yes or no)
+  - `duration` (randomized song length in seconds)
+  - `listen_position` (how far into the song the user listened)
+  - `completed` (boolean if they reached the end)
+  - `rating` (float from 1.0 to 5.0)
+  - `skipped` (true if stopped early)
 - Sends a new message every 2 seconds into the Kafka topic `music-streams`
 
 ### 2. Consumer (`consumer.py`)
@@ -54,22 +64,28 @@ This mimics how real platforms like Spotify or Apple Music analyze listener beha
 ### 3. Flask App (`app.py`)
 - Launches a live dashboard on `http://localhost:5000`
 - Displays all consumer messages as rows in a Bootstrap-styled table
+- Shows:
+  - Song metadata and user location
+  - Mood, completion status, skip status, rating
+  - How long the track is
+  - **Listen Position** (seconds)
+  - **% Listened** (normalized view of how much of the track was played)
 - Allows filtering by:
   - Artist
-  - Genre
-  - Platform
+  - Genre (dropdown)
+  - Platform (dropdown)
   - Country
-  - Mood
+  - Mood (dropdown)
   - Rating
   - Skipped (yes/no)
 
-The form preserves your selections & automatically refreshes every 5 seconds.
+The form preserves your selections & the page can be refreshed manually using a button (instead of auto-refreshing every 5 seconds), making it easier to apply filters before the view resets.
 
 ---
 
 ### Kafka and Big Data Concepts
 
-- Kafka supports **real-time streaming** which is fundamental to Big Data pipelines
+- Kafka supports **real-time streaming**, which is fundamental to Big Data pipelines
 - Uses **partitioning** to distribute workload across nodes or brokers
 - Messages are **append-only**, ideal for logs, streams, and events
 - Enables **loose coupling** between producers and consumers
@@ -84,7 +100,9 @@ In our case, music streaming events are fire-and-forget. Producers do not need t
 - **Producer**: The component that sends messages to a Kafka topic
 - **Consumer**: The component that reads from the topic in real time
 
-### Docker and Architecture
+---
+
+## Docker and Architecture
 
 Docker Compose runs both Kafka and Zookeeper so you can:
 - Set up the broker system locally
@@ -109,7 +127,9 @@ CREATE TABLE music_streams_by_user (
     mood TEXT,
     platform TEXT,
     duration INT,
-    rating INT,
+    listen_position INT,
+    completed BOOLEAN,
+    rating FLOAT,
     skipped BOOLEAN,
     city TEXT,
     country TEXT,
@@ -164,8 +184,8 @@ Go to [http://localhost:5000](http://localhost:5000) in your browser. You should
 
 To push this project further:
 
-- Add persistent storage using Cassandra  
-- Create graphs or visual analytics (e.x. genre distribution)  
+- Add persistent storage using Cassandra or PostgreSQL  
+- Create graphs or visual analytics (e.g. genre distribution, skip/drop-off trends)  
 - Use Kafka Connect or Spark Streaming for processing  
 - Simulate spikes in traffic or multi-user concurrency  
 - Store data in HDFS or S3 for batch analysis (as we are becoming experts in Amazon AWS)
@@ -174,12 +194,20 @@ To push this project further:
 
 ## Team Members
 
-- Hayoung Jung 
-- Anjana Madhaven 
-- Taylor Peterson 
+- Hayoung Jung  
+- Anjana Madhaven  
+- Taylor Peterson
 
 ---
 
 ## Summary
 
 This project simulates a simplified Big Data pipeline using Kafka and Flask. It incorporates essential concepts like producers, consumers, brokers, message topics, filtering, and partitioning. Using Docker and Faker makes the system reproducible and easily extensible. The architecture and schema design parallel what you might see in real platforms using Cassandra or distributed systems to analyze user behavior.
+
+In addition to core functionality, this project includes:
+- Mood classification
+- Completion detection
+- Skipping behavior
+- User rating input
+- Percentage of song played for engagement tracking
+

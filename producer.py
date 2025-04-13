@@ -69,7 +69,12 @@ moods = [
 # Send fake data every [2] seconds
 while True:
     track = random.choice(songs)
-    
+    duration = random.randint(90, 300)  # 1.5 to 5 minutes
+    listen_position = random.randint(0, duration)
+    completed = listen_position >= duration - 5
+    rating = round(random.uniform(1.0, 5.0), 1)
+    is_skipped = listen_position < 30
+
     data = {
         "user_id": fake.uuid4(),
         "name": fake.user_name(),
@@ -84,7 +89,12 @@ while True:
             "city": fake.city(),
             "country": fake.country()
         },
-        "mood": random.choice(moods)
+        "mood": random.choice(moods),
+        "duration_seconds": duration,
+        "listen_position": listen_position,
+        "completed": completed,
+        "rating": rating,
+        "is_skipped": is_skipped
     }
 
     print("Sending:", data)

@@ -146,19 +146,31 @@ The above schema supports:
 
 ## How to Run the Project
 
+Ensure that you have Docker installed and Python 3 available on your system
+
+### Clone the Repository / Navigate to Project Folder
+
+If you haven't already, open a bash terminal in the desired directory and run:
+
+```bash
+git clone https://github.com/YOUR-USERNAME/kafka-music-streaming.git
+cd kafka-music-streaming
+```
+
+
 ### 1. Start Kafka and Zookeeper with Docker
 
-From the project root:
+From the root of the project folder, (where `docker-compose.yml` is located) run:
 
 ```bash
 docker compose up -d
 ```
 
-This will run Kafka and Zookeeper in the background.
+This starts Kafka and Zookeeper in the background. 
 
 ### 2. Run the Kafka Producer
 
-In a second terminal:
+In a second terminal window, in the project directory:
 
 ```bash
 python producer.py
@@ -166,15 +178,17 @@ python producer.py
 
 ### 3. Run the Flask Web App
 
-In a third terminal:
+In a third terminal window, in the project directory:
 
 ```bash
 python app.py
 ```
 
+You’ll see * Running on http://127.0.0.1:5000/ in the terminal output.
+
 ### 4. View the Dashboard
 
-Go to [http://localhost:5000](http://localhost:5000) in your browser. You should see real-time data begin to populate the table. Use the form at the top to filter by any field.
+Go to [http://localhost:5000](http://localhost:5000) in your browser. The table should begin filling up with stream data. You can use the filter options at the top of the page to search by artist, genre, mood, country, platform, rating, etc.
 
 ---
 

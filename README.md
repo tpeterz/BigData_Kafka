@@ -6,10 +6,16 @@ This project demonstrates a simplified real-time data pipeline using **Apache Ka
 
 ## What This Project Does
 
+<<<<<<< HEAD
 We created a real-time streaming web app that mimics a music analytics dashboard. Every few seconds, it sends out new simulated music stream events like:
 
 - A user in **Japan** streamed “Glimpse of Us” on **Spotify** feeling **Melancholy**
 - Someone in **Colombia** listened to “Tokyo” on **YouTube Music**, skipped it, and rated it **4**
+=======
+We created a real-time streaming web app that mimics a music analytics dashboard. Every few seconds, it sends out new “fake” music stream events like (for example):
+- A user in **Japan** streamed “Glimpse of Us” on **Spotify**
+- Someone in **Colombia** listened to “Tokyo” on **YouTube Music** feeling **Melancholy**
+>>>>>>> 23807dd411451490c8006ee304212d599bbca6a7
 
 These events are:
 - Sent by a Kafka **producer**
@@ -17,7 +23,11 @@ These events are:
 - Displayed on a **Flask web interface**
 - Filterable by artist, genre, platform, country, mood, rating, or whether the song was skipped
 
+<<<<<<< HEAD
 This mimics how real platforms like Spotify or Apple Music analyze listener behavior, using randomized data for educational purposes.
+=======
+This mimics what real streaming platforms like Spotify might analyze that are simplified and randomized for learning purposes.
+>>>>>>> 23807dd411451490c8006ee304212d599bbca6a7
 
 ---
 

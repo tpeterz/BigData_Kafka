@@ -208,7 +208,7 @@ To push this project further:
 
 ## Summary
 
-This project simulates a simplified Big Data pipeline using Kafka and Flask. It incorporates essential concepts like producers, consumers, brokers, message topics, filtering, and partitioning. Using Docker and Faker makes the system reproducible and easily extensible. The architecture and schema design parallel what you might see in real platforms using Cassandra or distributed systems to analyze user behavior.
+This project simulates a simplified Big Data pipeline using Kafka and Flask. It incorporates concepts of producers, consumers, brokers, message topics, filtering, and partitioning. The architecture and schema design are similar to what you might see in real platforms using Cassandra to analyze user behavior.
 
 In addition to core functionality, this project includes:
 - Mood classification

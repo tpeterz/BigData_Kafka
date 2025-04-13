@@ -1,7 +1,7 @@
 from kafka import KafkaConsumer
 import json
-from app import stored_data 
 
+# Create Kafka consumer
 consumer = KafkaConsumer(
     'music-streams',
     bootstrap_servers='localhost:9092',
@@ -11,8 +11,14 @@ consumer = KafkaConsumer(
     group_id='music-group'
 )
 
-print("Listening for messages on 'music-streams'...\n")
-for message in consumer:
-    data = message.value
-    stored_data.append(data)
-    print(f"Received: {data}")
+# Shared list to store messages
+received_messages = []
+
+def consume_messages():
+    global received_messages  # <- ensures shared access
+    for message in consumer:
+        data = message.value
+        print(f"Received: {data}")
+        received_messages.append(data)
+        if len(received_messages) > 50:
+            received_messages.pop(0)

@@ -1,16 +1,40 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 import threading
-import time
+from consumer import received_messages, consume_messages
 
 app = Flask(__name__)
 
-# this guy STORES the Kafka messages
-stored_data = []
-
-@app.route("/")
+@app.route('/')
 def index():
-    # last 20 shown for now
-    return render_template("index.html", messages=stored_data[-20:])  
+    artist = request.args.get('artist', '').lower()
+    genre = request.args.get('genre', '').lower()
+    platform = request.args.get('platform', '').lower()
+    country = request.args.get('country', '').lower()
+    mood = request.args.get('mood', '').lower()
 
-if __name__ == "__main__":
+    filtered = []
+    for msg in received_messages:
+        if artist and artist not in msg['artist'].lower():
+            continue
+        if genre and genre not in msg['genre'].lower():
+            continue
+        if platform and platform not in msg['platform'].lower():
+            continue
+        if country and country not in msg['location']['country'].lower():
+            continue
+        if mood and mood not in msg.get('mood', '').lower():
+            continue
+        filtered.append(msg)
+
+    return render_template('index.html', messages=filtered)
+
+
+def start_consumer():
+    print("Starting consumer thread from Flask app...")
+    consume_messages()
+
+consumer_thread = threading.Thread(target=start_consumer, daemon=True)
+consumer_thread.start()
+
+if __name__ == '__main__':
     app.run(debug=True)

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Kafka Music Streaming Analysis Service</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 20px;
+        }
+        .record {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background: #f9f9f9;
+        }
+    </style>    
+</head>
+<body>
+    <h1>Kafka Music Streaming Analysis Service</h1>
+    {% for msg in messages %}
+        <div class="record">
+            <pre>{{ msg | tojson(indent=2) }}</pre>
+        </div>
+    {% endfor %}
+</body>
+</html>

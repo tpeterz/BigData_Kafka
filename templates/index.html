@@ -70,6 +70,7 @@
                     <th>Platform</th>
                     <th>City</th>
                     <th>Country</th>
+                    <th>Mood</th>
                 </tr>
             </thead>
             <tbody>
@@ -82,7 +83,8 @@
                     <td>{{ msg.platform }}</td>
                     <td>{{ msg.location.city }}</td>
                     <td>{{ msg.location.country }}</td>
-                </tr>
+                    <td>{{ msg.mood }}</td>
+                </tr>                
                 {% endfor %}
             </tbody>
         </table>

@@ -6,7 +6,7 @@ This project demonstrates a simplified real-time data pipeline using **Apache Ka
 
 ## What This Project Does
 
-We created a real-time streaming web app that mimics a music analytics dashboard. Every few seconds, it sends out new “fake” music stream events like:
+We created a real-time streaming web app that mimics a music analytics dashboard. Every few seconds, it sends out new “fake” music stream events like (for example):
 - A user in **Japan** streamed “Glimpse of Us” on **Spotify**
 - Someone in **Colombia** listened to “Tokyo” on **YouTube Music** feeling **Melancholy**
 

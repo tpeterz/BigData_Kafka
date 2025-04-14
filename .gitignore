@@ -2,12 +2,16 @@
 __pycache__/
 *.pyc
 
-# Ignore VS Code settings (optional)
+# Ignore VS Code settings 
 .vscode/
 
-# Ignore environment files (optional)
+# Ignore environment files 
 .env
 
-# Ignore OS system files (optional)
+# Ignore OS system files 
 .DS_Store
 Thumbs.db
+
+FBkey.json
+
+.vs/

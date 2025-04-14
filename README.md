@@ -20,8 +20,10 @@ Each message contains metadata such as:
 - A numeric user rating from 1 to 5
 
 These events are:
+- Generated inital genre, songs, and platform tables in a folder named `generate_data`
 - Sent by a Kafka **producer**
-- Received by a Kafka **consumer**
+- *Previously* - Received by a Kafka **consumer**
+- Generated Faker data being stored in Firebase . when reopen project doesnt start from ground zero
 - Displayed on a **Flask web interface**
 - Filterable by artist, genre, platform, country, mood, rating, or whether the song was skipped
 
@@ -34,32 +36,43 @@ This simulates how actual music streaming platforms analyze listener behavior, u
 | Layer        | Tool/Tech          | Purpose |
 |--------------|--------------------|---------|
 | Data Stream  | Apache Kafka       | Message broker for real-time event streaming |
+| Data Storage | Firebase           | Storing initial data for songs, platforms, & moods. Saving data for each time the server started. Storing streaming events. |
 | Backend      | Python + Flask     | Web server, consumer integration, filtering |
-| Frontend     | HTML + Bootstrap   | Dashboard UI, filtering forms |
-| Container    | Docker + Compose   | Orchestration of Kafka services |
-| Faker        | Python Faker lib   | Generates realistic but fake user data |
+| Frontend     | HTML + CSS (Bootstrap)   | Dashboard UI, filtering forms |
+| Container    | Docker + Compose   | Kafka services |
+| Faker        | Python Faker lib   | Generates fake user data |
 
 ---
 
 ## How It Works
 
-### 1. Producer (`producer.py`)
+
+### 1. Generate Data (`generate_data`)
+- Stores initial data into songs, mood, and platform collections.
+- Use Firestore's config to create documents and add into collections
+- `store_songs` 
+  - Creates inital song table with song title as document id  
+  - Fields of **title** (title of the song), **artist** (who made the song), & **genre** (category the song belongs in).
+  - Generates sample data for songs. Songs can be manually added to the database by user, but 
+- `store_platforms`
+  - Creates platform table with platform **name** as document id
+  - Only field is name (platform name)
+- `store_moods`
+  - Creates mood table with mood **name** as document id
+  - Only field is name (mood name)
+
+### 2. Producer (`producer.py`)
 - Uses `Faker` to simulate:
   - `user_id`, `username`, and `email`
   - Song `title`, `artist`, and `genre` (pulled from a pre-defined curated list)
   - Platform (Spotify, YouTube Music, Apple Music, SoundCloud, etc.)
-  - Mood tag (e.g. Chill, Energetic, Sad)
+  - Mood tag (Chill, Energetic, Sad, etc.)
   - `duration` (randomized song length in seconds)
   - `listen_position` (how far into the song the user listened)
   - `completed` (boolean if they reached the end)
   - `rating` (float from 1.0 to 5.0)
   - `skipped` (true if stopped early)
-- Sends a new message every 2 seconds into the Kafka topic `music-streams`
-
-### 2. Consumer (`consumer.py`)
-- Subscribes to `music-streams`
-- Consumes data in real time and stores the latest 50 messages in memory
-- Outputs each received message to the terminal for inspection
+- Sends a new message every 2 seconds into the Kafka topic `music-streams` & Firestore's `stream_events` collection
 
 ### 3. Flask App (`app.py`)
 - Launches a live dashboard on `http://localhost:5000`
@@ -78,8 +91,28 @@ This simulates how actual music streaming platforms analyze listener behavior, u
   - Mood (dropdown)
   - Rating
   - Skipped (yes/no)
+- Functionality to add new stream events  into the `stream_events` collection
+  - Fields to complete:
+    - User Name
+    - User Email
+    - Song Title
+    - Artist
+    - Genre (dropdown)
+    - Platform (dropdown)
+    - City
+    - Country
+    - Mood (dropdown)
+    - Duration (s) (song duration in seconds)
+    - Listen Position (where the user stops listening)
+    - Rating (0-5)
+    - Completed 
 
 The form preserves the selections & the page can be refreshed manually to view an updated list of tracks and their  statistics.
+
+### Outdated - Consumer (`consumer.py`)
+- Subscribes to `music-streams`
+- Consumes data in real time and stores the latest 50 messages in memory
+- Outputs each received message to the terminal for inspection
 
 ---
 

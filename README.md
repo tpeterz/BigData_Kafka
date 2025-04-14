@@ -231,6 +231,14 @@ This is how the real-time data appears when viewed in the Flask web app:
 
 ![Live Dashboard](pictures/Homepage_V1.png)
 
+Users can fill out the **"Add A Custom Stream Event** form to add their own data:
+
+![User Form](pictures/formfill.png)
+
+Once submitted, users will see their event added to the table:
+
+![SuccessAdd](pictures/successadd.png)
+
 ---
 
 ## Future Considerations

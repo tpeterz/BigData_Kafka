@@ -235,7 +235,7 @@ Users can fill out the **"Add A Custom Stream Event** form to add their own data
 
 ![User Form](pictures/formfill.png)
 
-Once submitted, users will see their event added to the table:
+Once submitted, users will see their event added to the table (successful addition displayed at the top of the table):
 
 ![SuccessAdd](pictures/successadd.png)
 

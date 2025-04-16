@@ -20,10 +20,10 @@ Each message contains metadata such as:
 - A numeric user rating from 1 to 5
 
 These events are:
-- Generated inital genre, songs, and platform tables in a folder named `generate_data`
+- Generated initial genre, songs, and platform tables in a folder named `generate_data`
 - Sent by a Kafka **producer**
-- *Previously* - Received by a Kafka **consumer**
-- Generated Faker data being stored in Firebase . when reopen project doesnt start from ground zero
+- Received by a Kafka **consumer**, which consumes and optionally processes streamed messages in real time
+- Generated Faker data is stored in Firebase, so the app doesn't reset to zero when restarted
 - Displayed on a **Flask web interface**
 - Filterable by artist, genre, platform, country, mood, rating, or whether the song was skipped
 
@@ -49,17 +49,20 @@ This simulates how actual music streaming platforms analyze listener behavior, u
 
 ### 1. Generate Data (`generate_data`)
 - Stores initial data into songs, mood, and platform collections.
-- Use Firestore's config to create documents and add into collections
+- Uses Firestore's config to populate collections with initial data
 - `store_songs` 
-  - Creates inital song table with song title as document id  
+  - Creates initial song table with song title as document id  
   - Fields of **title** (title of the song), **artist** (who made the song), & **genre** (category the song belongs in).
-  - Generates sample data for songs. Songs can be manually added to the database by user, but 
+  - Generates sample data for songs. Users can also add songs manually through the form interface which automatically updates the database.
 - `store_platforms`
   - Creates platform table with platform **name** as document id
   - Only field is name (platform name)
 - `store_moods`
   - Creates mood table with mood **name** as document id
   - Only field is name (mood name)
+- `store_genres`
+  * This generates the **genres** DB. It populates to the DB with an array of inital genres + it goes through the song DB and takes every genre from there as well. 
+  * This DB is where Faker grabs the **genres**
 
 ### 2. Producer (`producer.py`)
 - Uses `Faker` to simulate:
@@ -72,9 +75,14 @@ This simulates how actual music streaming platforms analyze listener behavior, u
   - `completed` (boolean if they reached the end)
   - `rating` (float from 1.0 to 5.0)
   - `skipped` (true if stopped early)
-- Sends a new message every 2 seconds into the Kafka topic `music-streams` & Firestore's `stream_events` collection
+- Sends a new message every 2 seconds into the Kafka topic `music-streams`.
 
-### 3. Flask App (`app.py`)
+### 3. Consumer (`consumer.py`)
+- Subscribes to  `music-streams` Kafka topic
+- Consumes data in real time and prints messages to the terminal for verification
+- Could be extended to include analytics, transformation, etc.
+
+### 4. Flask App (`app.py`)
 - Launches a live dashboard on `http://localhost:5000`
 - Displays all consumer messages as rows in a Bootstrap-styled table
 - Shows:
@@ -109,11 +117,6 @@ This simulates how actual music streaming platforms analyze listener behavior, u
 
 The form preserves the selections & the page can be refreshed manually to view an updated list of tracks and their  statistics.
 
-### Outdated - Consumer (`consumer.py`)
-- Subscribes to `music-streams`
-- Consumes data in real time and stores the latest 50 messages in memory
-- Outputs each received message to the terminal for inspection
-
 ---
 
 ### Kafka and Big Data Concepts
@@ -121,9 +124,10 @@ The form preserves the selections & the page can be refreshed manually to view a
 - Kafka supports **real-time streaming**, which is fundamental to Big Data pipelines
 - Uses **partitioning** to distribute workload across nodes or brokers
 - Messages are **append-only**, which is ideal for logs, streams, and events
-- Enables **loose coupling** between producers and consumers
-
-In our case, Producers do not need to know who consumes the data, and consumers can independently scale or process messages as they need.
+- Enables "loose coupling" between producers and consumers
+- Kafka enables "decoupled architecture", where producers and consumers operate independently and asynchronously
+- Ourp project uses Kafka’s fault-tolerant message queue, so events don’t get lost even if the dashboard is restarted
+- While this project uses one topic, Kafka is designed to scale to many producers and consumers, handling massive amounts of data across distributed systems
 
 #### Kafka Terminology
 
@@ -269,17 +273,17 @@ To push this project further:
 
 
 * `store_songs` 
-  * Inital songs database gets populated with an array for Faker to start grabbing from prior to any users adding their stream events [inital population]
-  * Since there are two ways we populate the DB, the second way is through add stream event. On-click, the code checks the DB to see if the song already exists. If not, a document is added to the **song** DB to represent the song 
+  * Inital songs database gets populated with an array for Faker to start fetching from prior to any users adding their stream events [inital population]
+  * Since there are two ways we populate the DB, the second way is through add stream event. When a user submits a form, the code checks the DB to see if the song already exists. If not, a document is added to the **song** DB to represent the song 
 * `store_moods` 
   * This generates the mood DB with all of the moods that you can choose for a song. This is a finite number of moods, because that's all we wanted to allow & prevents the need to update after every stream event. 
-  * This DB is where Faker grabs the **moods**
+  * This DB is where Faker pulls the **moods**
 * `store_platforms ` 
   * This generates the **platform** DB with the only 5 streaming platforms that we allow to be included in the DB/project. 
-  * This DB is where Faker grabs the **platforms**
+  * This DB is where Faker pulls the **platforms**
 * `store_genres`
   * This generates the **genres** DB. It populates to the DB with an array of inital genres + it goes through the song DB and takes every genre from there as well. 
-  * This DB is where Faker grabs the **genres**
+  * This DB is where Faker pulls the **genres**
 ---
 
 ## Summary

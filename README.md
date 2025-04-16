@@ -33,7 +33,7 @@ This simulates how actual music streaming platforms analyze listener behavior, u
 
 ## What We Used
 
-| Layer        | Tool/Tech          | Purpose |
+| Process        | Tool/Tech          | Purpose |
 |--------------|--------------------|---------|
 | Data Stream  | Apache Kafka       | Message broker for real-time event streaming |
 | Data Storage | Firebase           | Storing initial data for songs, platforms, & moods. Saving data for each time the server started. Storing streaming events. |

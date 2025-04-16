@@ -5,15 +5,13 @@ import json, random, time
 import firebase_admin
 from firebase_admin import credentials, firestore
 
-# Init Firebase
+
 if not firebase_admin._apps:
     cred = credentials.Certificate("FBkey.json")  
     firebase_admin.initialize_app(cred)
 
-# Firestore client
 db = firestore.client()
 
-# Fetch songs, platforms, and moods from Firestore
 def fetch_firestore_data():
     songs_ref = db.collection("songs").stream()
     platforms_ref = db.collection("platforms").stream()
@@ -27,7 +25,6 @@ def fetch_firestore_data():
 
 songs, platforms, moods = fetch_firestore_data()
 
-# Init Faker & Kafka producer
 fake = Faker()
 producer = KafkaProducer(
     bootstrap_servers='localhost:9092',
@@ -37,9 +34,9 @@ producer = KafkaProducer(
 while True:
     track = random.choice(songs)
     duration = random.randint(90, 300)
-    listen_position = random.randint(0, duration) + 1
+    listen_position = random.randint(0, duration)
     completed = listen_position / duration >= .8
-    rating = random.randint(0,5)
+    rating = random.randint(0, 5)
     is_skipped = not completed
 
     data = {
@@ -64,15 +61,6 @@ while True:
         "is_skipped": is_skipped
     }
 
-    # Store in Firestore
-    event_id = f"{data['user_id']}_{data['track_id']}"
-    try:
-        db.collection("stream_events").document(event_id).set(data)
-        print(f"Stored in Firestore: {event_id}")
-    except Exception as e:
-        print(f"Firestore error: {e}")
-
-    # Send to Kafka
     print("Sending to Kafka:", data)
     producer.send("music-streams", data)
     time.sleep(2)

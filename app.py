@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, redirect, render_template, request, url_for
 import firebase_admin
 from firebase_admin import credentials, firestore
 from uuid import uuid4
@@ -34,8 +34,15 @@ def index():
     skipped = request.args.get('skipped', '').lower()
     completed = request.args.get('completed', '').lower()
 
+    sort_by = request.args.get('sort_by', 'timestamp')
+    sort_order = request.args.get('sort_order', 'desc')
+
     messages = fetch_stream_events()
     filtered = []
+
+    genres = sorted([doc.to_dict()['name'] for doc in db.collection("genres").stream()])
+    platforms = sorted([doc.to_dict()['name'] for doc in db.collection("platforms").stream()])
+    moods = sorted([doc.to_dict()['name'] for doc in db.collection("moods").stream()])
 
     for msg in messages:
         if artist and artist not in msg['artist'].lower():
@@ -50,7 +57,7 @@ def index():
             continue
         if rating:
             try:
-                if float(msg.get('rating', 0)) < float(rating):
+                if int(msg.get('rating', 0)) < int(rating):
                     continue
             except ValueError:
                 continue
@@ -65,13 +72,49 @@ def index():
 
         filtered.append(msg)
 
-    return render_template('index.html', messages=filtered)
+    reverse = (sort_order == 'desc')
+
+    def sort_key(msg):
+        if sort_by == 'name':
+            return msg.get('name', '').lower()
+        elif sort_by == 'title':
+            return msg.get('title', '').lower()
+        elif sort_by == 'artist':
+            return msg.get('artist', '').lower()
+        elif sort_by == 'genre':
+            return msg.get('genre', '').lower()
+        elif sort_by == 'platform':
+            return msg.get('platform', '').lower()
+        elif sort_by == 'city':
+            return msg.get('location', {}).get('city', '').lower()
+        elif sort_by == 'country':
+            return msg.get('location', {}).get('country', '').lower()
+        elif sort_by == 'duration_seconds':
+            return int(msg.get('duration_seconds', 0))
+        elif sort_by == 'listen_position':
+            return int(msg.get('listen_position', 0))
+        elif sort_by == '%_listened':
+            duration = msg.get('duration_seconds', 1)
+            return (msg.get('listen_position', 0) / duration) if duration > 0 else 0
+        elif sort_by == 'rating':
+            return float(msg.get('rating', 0))
+        else:
+            return msg.get('timestamp', 0)
+
+    filtered = sorted(filtered, key=sort_key, reverse=reverse)
+
+    return render_template('index.html',
+                           messages=filtered,
+                           genres=genres,
+                           platforms=platforms,
+                           moods=moods,
+                           sort_by=sort_by,
+                           sort_order=sort_order)
 
 @app.route('/add', methods=['POST'])
 def add_stream_event():
     form = request.form
 
-    # Create the event data
     event = {
         "user_id": str(uuid4()),
         "name": form['name'],
@@ -89,12 +132,11 @@ def add_stream_event():
         "mood": form['mood'],
         "duration_seconds": int(form['duration_seconds']),
         "listen_position": int(form['listen_position']),
-        "completed": int(form['listen_position']) == int(form['duration_seconds']),
-        "rating": float(form['rating']),
-        "is_skipped": int(form['listen_position']) != int(form['duration_seconds'])
+        "completed": float(form['listen_position']) / float(form['duration_seconds']) >= .8,
+        "rating": int(form['rating']),
+        "is_skipped": float(form['listen_position']) / float(form['duration_seconds']) < .8
     }
 
-    # Store the stream event
     event_id = f"{event['user_id']}_{event['track_id']}"
     try:
         db.collection("stream_events").document(event_id).set(event)
@@ -102,7 +144,6 @@ def add_stream_event():
     except Exception as e:
         print(f"Failed to store stream event: {e}")
 
-    # Check if song is already in the songs database (by title)
     song_title = form['title']
     songs_ref = db.collection("songs")
     existing = songs_ref.where("title", "==", song_title).limit(1).stream()
@@ -121,13 +162,7 @@ def add_stream_event():
         except Exception as e:
             print(f"Failed to add song to songs collection: {e}")
 
-    # Reload and return the index page
-    messages = fetch_stream_events()
-    songs_data = db.collection("songs").stream()
-    songs = [doc.to_dict() for doc in songs_data]
-
-    return render_template("index.html", messages=messages, songs=songs)
-
+    return redirect("/")
 
 if __name__ == '__main__':
     app.run(debug=True)

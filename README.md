@@ -269,7 +269,7 @@ To push this project further:
 
 Folder | `generate_data` 
 
-* We **must** run `store_songs` before `store_genres` as `store_genres` is dependent on `store_songs`
+We **must** run `store_songs` before `store_genres` as `store_genres` is dependent on `store_songs`
 
 
 * `store_songs` 

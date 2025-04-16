@@ -33,7 +33,7 @@ This simulates how actual music streaming platforms analyze listener behavior, u
 
 ## What We Used
 
-| Process        | Tool/Tech          | Purpose |
+| Layer        | Tool/Tech          | Purpose |
 |--------------|--------------------|---------|
 | Data Stream  | Apache Kafka       | Message broker for real-time event streaming |
 | Data Storage | Firebase           | Storing initial data for songs, platforms, & moods. Saving data for each time the server started. Storing streaming events. |
@@ -259,6 +259,27 @@ To push this project further:
 - Anjana Madhaven  
 - Taylor Peterson
 
+---
+
+## File Structure/Description
+
+`generate_data` 
+
+* We **must** run `store_songs` before `store_genres` as `store_genres` is dependent on `store_songs`
+
+
+* `store_songs` 
+  * Inital songs database gets populated with an array for Faker to start grabbing from prior to any users adding their stream events [inital population]
+  * Since there are two ways we populate the DB, the second way is through add stream event. On-click, the code checks the DB to see if the song already exists. If not, a document is added to the **song** DB to represent the song 
+* `store_moods` 
+  * This generates the mood DB with all of the moods that you can choose for a song. This is a finite number of moods, because that's all we wanted to allow & prevents the need to update after every stream event. 
+  * This DB is where Faker grabs the **moods**
+* `store_platforms ` 
+  * This generates the **platform** DB with the only 5 streaming platforms that we allow to be included in the DB/project. 
+  * This DB is where Faker grabs the **platforms**
+* `store_genres`
+  * This generates the **genres** DB. It populates to the DB with an array of inital genres + it goes through the song DB and takes every genre from there as well. 
+  * This DB is where Faker grabs the **genres**
 ---
 
 ## Summary

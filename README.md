@@ -267,7 +267,7 @@ To push this project further:
 
 ## File Structure/Description
 
-`generate_data` 
+Folder | `generate_data` 
 
 * We **must** run `store_songs` before `store_genres` as `store_genres` is dependent on `store_songs`
 

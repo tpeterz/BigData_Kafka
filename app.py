@@ -158,7 +158,7 @@ def add_stream_event():
             }
             doc_id = song_title.replace(" ", "_").replace("/", "-")
             songs_ref.document(doc_id).set(new_song_doc)
-            print(f"🎵 Added new song to database: {song_title}")
+            print(f"Added new song to database: {song_title}")
         except Exception as e:
             print(f"Failed to add song to songs collection: {e}")
 

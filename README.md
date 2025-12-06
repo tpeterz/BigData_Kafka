@@ -257,10 +257,8 @@ To push this project further:
 
 ---
 
-## Team Members
+## Author
 
-- Hayoung Jung  
-- Anjana Madhaven  
 - Taylor Peterson
 
 ---
